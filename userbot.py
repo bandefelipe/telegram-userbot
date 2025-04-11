@@ -47,7 +47,7 @@ app = Client(
     name="userbot",
     api_id=API_ID,
     api_hash=API_HASH,
-    session_string=open(".secrets/user.session").read().strip()
+    session_string = open("/etc/secrets/user.session").read().strip()
 )
 
 def extrair_valor_apos_label(imagem: Image.Image):
