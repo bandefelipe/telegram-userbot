@@ -6,6 +6,7 @@ import pytesseract
 import re
 import logging
 from io import BytesIO
+import numpy as np
 from pyrogram.enums import ParseMode
 
 API_ID = int(os.environ["API_ID"])
@@ -51,21 +52,43 @@ app = Client(
 )
 
 def extrair_valor_apos_label(imagem: Image.Image):
-    texto = pytesseract.image_to_string(imagem, lang='por')
-    logging.info(f"[OCR] Texto extraído:\n{texto}")
-    linhas = texto.splitlines()
-    for linha in linhas:
-        if LABEL.lower() in linha.lower():
-            logging.info(f"[OCR] Linha com label encontrada: {linha}")
-            partes = linha.split()
-            for i, parte in enumerate(partes):
-                if LABEL.split()[0].lower() in parte.lower():
-                    try:
-                        valor = partes[i+2] if partes[i+1].lower() == 'totais' else partes[i+1]
-                        return valor.replace(',', '.')
-                    except IndexError:
-                        continue
-    return None
+    try:
+        # Recorta o quarto inferior da imagem
+        largura, altura = imagem.size
+        y_inicio = int(altura * 0.75)
+        imagem = imagem.crop((0, y_inicio, largura, altura))
+
+        # Pré-processamento com OpenCV
+        imagem_cv = cv2.cvtColor(np.array(imagem), cv2.COLOR_RGB2BGR)
+        imagem_gray = cv2.cvtColor(imagem_cv, cv2.COLOR_BGR2GRAY)
+        imagem_filt = cv2.bilateralFilter(imagem_gray, 11, 17, 17)
+        _, imagem_thresh = cv2.threshold(imagem_filt, 150, 255, cv2.THRESH_BINARY_INV)
+        imagem_preprocessada = Image.fromarray(imagem_thresh)
+
+        # Configuração customizada do Tesseract
+        config = r'--oem 3 --psm 6'
+        texto = pytesseract.image_to_string(imagem_preprocessada, lang='por', config=config)
+        logging.info(f"[OCR] Texto extraído:\n{texto}")
+
+        # Expressões regulares mais tolerantes
+        padroes = [
+            r"cota[çc][aã]o(?:es)?\s+totais?\s*[:\-]?\s*([\d.,]+)",
+            r"total\s+de\s+cota[çc][aã]o(?:es)?\s*[:\-]?\s*([\d.,]+)"
+        ]
+
+        for padrao in padroes:
+            match = re.search(padrao, texto, re.IGNORECASE)
+            if match:
+                valor = match.group(1).replace(',', '.')
+                logging.info(f"[OCR] Valor encontrado: {valor}")
+                return valor
+
+        logging.warning("⚠️ [OCR] Não consegui identificar a cotação.")
+        return None
+
+    except Exception as e:
+        logging.error(f"[OCR] Erro inesperado: {e}")
+        return None
 
 def corrigir_valor_ocr(valor: str) -> str:
     if '.' in valor:
