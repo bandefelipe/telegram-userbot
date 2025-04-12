@@ -8,6 +8,8 @@ import logging
 from io import BytesIO
 import numpy as np
 from pyrogram.enums import ParseMode
+from typing import Optional
+import cv2
 
 API_ID = int(os.environ["API_ID"])
 API_HASH = os.environ["API_HASH"]
@@ -51,26 +53,28 @@ app = Client(
     session_string = open("user.session").read().strip()
 )
 
-def extrair_valor_apos_label(imagem: Image.Image):
+def extrair_valor_apos_label(imagem: Image.Image) -> Optional[str]:
     try:
-        # Recorta o quarto inferior da imagem
+        # 🔽 Recorta apenas o quarto inferior da imagem
         largura, altura = imagem.size
         y_inicio = int(altura * 0.75)
-        imagem = imagem.crop((0, y_inicio, largura, altura))
+        recorte_inferior = imagem.crop((0, y_inicio, largura, altura))
 
-        # Pré-processamento com OpenCV
-        imagem_cv = cv2.cvtColor(np.array(imagem), cv2.COLOR_RGB2BGR)
+        # 🔍 Pré-processamento com OpenCV para fundo escuro
+        imagem_cv = cv2.cvtColor(np.array(recorte_inferior), cv2.COLOR_RGB2BGR)
         imagem_gray = cv2.cvtColor(imagem_cv, cv2.COLOR_BGR2GRAY)
-        imagem_filt = cv2.bilateralFilter(imagem_gray, 11, 17, 17)
-        _, imagem_thresh = cv2.threshold(imagem_filt, 150, 255, cv2.THRESH_BINARY_INV)
+        # Suaviza e mantém bordas
+        imagem_filt = cv2.bilateralFilter(imagem_gray, 9, 75, 75)
+        # ⚪ Threshold invertido para realçar texto claro
+        _, imagem_thresh = cv2.threshold(imagem_filt, 100, 255, cv2.THRESH_BINARY_INV)
         imagem_preprocessada = Image.fromarray(imagem_thresh)
 
-        # Configuração customizada do Tesseract
-        config = r'--oem 3 --psm 6'
+        # 🧠 OCR com configuração focada em linha única
+        config = r'--oem 3 --psm 11'
         texto = pytesseract.image_to_string(imagem_preprocessada, lang='por', config=config)
         logging.info(f"[OCR] Texto extraído:\n{texto}")
 
-        # Expressões regulares mais tolerantes
+        # 🔍 Regex tolerante a variações de escrita
         padroes = [
             r"cota[çc][aã]o(?:es)?\s+totais?\s*[:\-]?\s*([\d.,]+)",
             r"total\s+de\s+cota[çc][aã]o(?:es)?\s*[:\-]?\s*([\d.,]+)"
