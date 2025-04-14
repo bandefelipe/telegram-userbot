@@ -53,7 +53,7 @@ app = Client(
     session_string = open("user.session").read().strip()
 )
 
-async def extrair_valor_apos_label(imagem: Image.Image) -> Optional[str]:
+async def extrair_valor_apos_label(imagem: Image.Image, chat_id: int, app: Client) -> Optional[str]:
     try:
         # 🔽 Recorta apenas o quarto inferior da imagem
         largura, altura = imagem.size
@@ -132,7 +132,7 @@ async def processar_mensagem(client: Client, message: Message):
 
     foto = await message.download()
     with Image.open(foto) as imagem:
-        valor = await extrair_valor_apos_label(imagem)
+        valor = await extrair_valor_apos_label(imagem, message.chat.id, app)
 
     if not valor:
         await message.reply_text("Não consegui identificar a cotação na imagem.")
