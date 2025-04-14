@@ -68,16 +68,17 @@ async def extrair_valor_apos_label(imagem: Image.Image, chat_id: int, app: Clien
         # Suaviza e mantém bordas
         imagem_filt = cv2.bilateralFilter(imagem_gray, 9, 75, 75)
         Image.fromarray(imagem_filt).save("debug_2_suavizacao.png")
-        # ⚪ Threshold invertido para realçar texto claro
+
+        # 👁️ Imagem final para OCR (sem threshold)
         imagem_preprocessada = Image.fromarray(imagem_filt)
-        imagem_preprocessada.save("debug_3_threshold.png")
+        imagem_preprocessada.save("debug_3_ocr_final.png")
+
         # 🧠 OCR com configuração focada em linha única
-        config = r'--oem 3 --psm 11'
+        config = r'--oem 3 --psm 6'
         # OCR no recorte original
         texto_original = pytesseract.image_to_string(recorte_inferior, lang='por', config=config)
 
-        # OCR no recorte pré-processado (apenas filtro, sem threshold por enquanto)
-        imagem_preprocessada = Image.fromarray(imagem_filt)
+        # OCR no recorte pré-processado
         texto_processado = pytesseract.image_to_string(imagem_preprocessada, lang='por', config=config)
 
         # Junta os textos
