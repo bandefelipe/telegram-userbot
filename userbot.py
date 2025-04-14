@@ -132,7 +132,7 @@ async def processar_mensagem(client: Client, message: Message):
 
     foto = await message.download()
     with Image.open(foto) as imagem:
-        valor = extrair_valor_apos_label(imagem)
+        valor = await extrair_valor_apos_label(imagem)
 
     if not valor:
         await message.reply_text("Não consegui identificar a cotação na imagem.")
