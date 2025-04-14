@@ -102,6 +102,9 @@ async def extrair_valor_apos_label(imagem: Image.Image, chat_id: int, app: Clien
         await app.send_photo(chat_id, "debug_1_recorte_inferior.png", caption="📸 Recorte Inferior")
         await app.send_photo(chat_id, "debug_2_suavizacao.png", caption="🎨 Suavização")
         await app.send_photo(chat_id, "debug_3_threshold.png", caption="🖤 Pós-Threshold")
+        os.remove("debug_1_recorte_inferior.png")
+        os.remove("debug_2_suavizacao.png")
+        os.remove("debug_3_threshold.png")
 
         return None
 
