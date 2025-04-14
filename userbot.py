@@ -12,7 +12,7 @@ from pyrogram.types import Message
 import cv2
 
 API_ID = int(os.environ["API_ID"])
-API_HASH = os.environ["API_HASH"])
+API_HASH = os.environ["API_HASH"]
 ID_GRUPO_AUTORIZADO = int(os.environ["ID_GRUPO_AUTORIZADO"])
 
 # Templates
