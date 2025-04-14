@@ -65,13 +65,20 @@ async def extrair_valor_apos_label(imagem: Image.Image, chat_id: int, app: Clien
         logging.info(f"[OCR-pytesseract] Texto extraído:\n{texto}")
         await app.send_message(chat_id, f"[OCR] Texto após pytesseract:\n{texto}")
 
-        # Regex para buscar o valor
-        padrao = r"cota[çc][aã]o(?:es)?\s+totais\s*[:\-]?\s*([\d.,]+)"
-        match = re.search(padrao, texto, re.IGNORECASE)
-        if match:
-            valor = match.group(1).replace(',', '.')
-            logging.info(f"[OCR-pytesseract] Valor encontrado: {valor}")
-            return valor
+        linhas = texto.splitlines()
+        for linha in linhas:
+            if LABEL.lower() in linha.lower():
+                logging.info(f"[OCR] Linha com label encontrada: {linha}")
+                partes = linha.split()
+                for i, parte in enumerate(partes):
+                    if LABEL.split()[0].lower() in parte.lower():
+                        try:
+                            valor = partes[i+2] if partes[i+1].lower() == 'totais' else partes[i+1]
+                            valor = valor.replace(',', '.')
+                            logging.info(f"[OCR] Valor extraído da linha: {valor}")
+                            return valor
+                        except IndexError:
+                            continue
 
         await app.send_message(chat_id, "⚠️ Não consegui identificar a cotação. Enviando imagens de debug:")
         await app.send_photo(chat_id, "debug_1_recorte_inferior.png", caption="📸 Recorte Inferior")
