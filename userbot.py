@@ -61,7 +61,7 @@ async def extrair_valor_apos_label(imagem: Image.Image, chat_id: int, app: Clien
         recorte_inferior.save("debug_1_recorte_inferior.png")
 
         # OCR com pytesseract
-        texto = pytesseract.image_to_string(imagem, lang='por')
+        texto = pytesseract.image_to_string(recorte_inferior, lang='por')
         logging.info(f"[OCR-pytesseract] Texto extraído:\n{texto}")
         await app.send_message(chat_id, f"[OCR] Texto após pytesseract:\n{texto}")
 
