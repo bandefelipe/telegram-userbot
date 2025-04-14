@@ -53,7 +53,7 @@ app = Client(
     session_string = open("user.session").read().strip()
 )
 
-def extrair_valor_apos_label(imagem: Image.Image) -> Optional[str]:
+async def extrair_valor_apos_label(imagem: Image.Image) -> Optional[str]:
     try:
         # 🔽 Recorta apenas o quarto inferior da imagem
         largura, altura = imagem.size
