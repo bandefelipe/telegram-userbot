@@ -65,10 +65,10 @@ async def extrair_valor_apos_label(imagem: Image.Image, chat_id: int, app: Clien
         logging.info(f"[OCR] Texto após Tesseract:\n{texto}")
         await app.send_message(chat_id, f"[OCR] Texto após Tesseract:\n{texto}")
 
-            padrao = r"cotações\s+totais\s*[:\-]?\s*([\d.,]+)"
+        padrao = r"cotações\s+totais\s*[:\-]?\s*([\d.,]+)"
         
-            match = re.search(padrao, texto, re.IGNORECASE)
-            if match:
+        match = re.search(padrao, texto, re.IGNORECASE)
+        if match:
                 valor = match.group(1).replace(',', '.')
                 logging.info(f"[OCR] Valor encontrado: {valor}")
                 return valor
