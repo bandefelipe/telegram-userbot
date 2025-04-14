@@ -59,19 +59,29 @@ def extrair_valor_apos_label(imagem: Image.Image) -> Optional[str]:
         largura, altura = imagem.size
         y_inicio = int(altura * 0.75)
         recorte_inferior = imagem.crop((0, y_inicio, largura, altura))
+        recorte_inferior.save("debug_1_recorte_inferior.png")
+
 
         # 🔍 Pré-processamento com OpenCV para fundo escuro
         imagem_cv = cv2.cvtColor(np.array(recorte_inferior), cv2.COLOR_RGB2BGR)
         imagem_gray = cv2.cvtColor(imagem_cv, cv2.COLOR_BGR2GRAY)
         # Suaviza e mantém bordas
         imagem_filt = cv2.bilateralFilter(imagem_gray, 9, 75, 75)
+        Image.fromarray(imagem_filt).save("debug_2_suavizacao.png")
         # ⚪ Threshold invertido para realçar texto claro
-        _, imagem_thresh = cv2.threshold(imagem_filt, 100, 255, cv2.THRESH_BINARY_INV)
-        imagem_preprocessada = Image.fromarray(imagem_thresh)
-
+        imagem_preprocessada = Image.fromarray(imagem_filt)
+        imagem_preprocessada.save("debug_3_threshold.png")
         # 🧠 OCR com configuração focada em linha única
         config = r'--oem 3 --psm 11'
-        texto = pytesseract.image_to_string(imagem_preprocessada, lang='por', config=config)
+        # OCR no recorte original
+        texto_original = pytesseract.image_to_string(recorte_inferior, lang='por', config=config)
+
+        # OCR no recorte pré-processado (apenas filtro, sem threshold por enquanto)
+        imagem_preprocessada = Image.fromarray(imagem_filt)
+        texto_processado = pytesseract.image_to_string(imagem_preprocessada, lang='por', config=config)
+
+        # Junta os textos
+        texto = texto_original + '\n' + texto_processado
         logging.info(f"[OCR] Texto extraído:\n{texto}")
 
         # 🔍 Regex tolerante a variações de escrita
