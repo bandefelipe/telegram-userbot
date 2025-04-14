@@ -52,26 +52,35 @@ app = Client(
     session_string=open("user.session").read().strip()
 )
 
+import easyocr
+
+reader = easyocr.Reader(['pt'])  # Inicializa uma vez
+
 async def extrair_valor_apos_label(imagem: Image.Image, chat_id: int, app: Client) -> Optional[str]:
     try:
+        # 🔽 Recorte da parte inferior da imagem
         largura, altura = imagem.size
         y_inicio = int(altura * 0.60)
         recorte_inferior = imagem.crop((0, y_inicio, largura, altura))
         recorte_inferior.save("debug_1_recorte_inferior.png")
 
-        config = r'--oem 3 --psm 6'
-        texto = pytesseract.image_to_string(recorte_inferior, lang='por', config=config)
-        
-        logging.info(f"[OCR] Texto após Tesseract:\n{texto}")
-        await app.send_message(chat_id, f"[OCR] Texto após Tesseract:\n{texto}")
+        # Converte para formato OpenCV (numpy array BGR)
+        imagem_cv = cv2.cvtColor(np.array(recorte_inferior), cv2.COLOR_RGB2BGR)
 
-        padrao = r"cotações\s+totais\s*[:\-]?\s*([\d.,]+)"
-        
+        # 🧠 OCR com EasyOCR
+        resultados = reader.readtext(imagem_cv)
+
+        texto = "\n".join([res[1] for res in resultados])
+        logging.info(f"[OCR-Easy] Texto extraído:\n{texto}")
+        await app.send_message(chat_id, f"[OCR] Texto após EasyOCR:\n{texto}")
+
+        # Regex para buscar apenas "Cotações totais"
+        padrao = r"cota[çc][aã]o(?:es)?\s+totais\s*[:\-]?\s*([\d.,]+)"
         match = re.search(padrao, texto, re.IGNORECASE)
         if match:
-                valor = match.group(1).replace(',', '.')
-                logging.info(f"[OCR] Valor encontrado: {valor}")
-                return valor
+            valor = match.group(1).replace(',', '.')
+            logging.info(f"[OCR-Easy] Valor encontrado: {valor}")
+            return valor
 
         await app.send_message(chat_id, "⚠️ Não consegui identificar a cotação. Enviando imagens de debug:")
         await app.send_photo(chat_id, "debug_1_recorte_inferior.png", caption="📸 Recorte Inferior")
@@ -79,8 +88,8 @@ async def extrair_valor_apos_label(imagem: Image.Image, chat_id: int, app: Clien
         return None
 
     except Exception as e:
-        logging.error(f"[OCR] Erro inesperado: {e}")
-        await app.send_message(chat_id, f"❌ Erro ao processar imagem: {e}")
+        logging.error(f"[OCR-Easy] Erro inesperado: {e}")
+        await app.send_message(chat_id, f"❌ Erro ao processar imagem com EasyOCR: {e}")
         return None
 
 def corrigir_valor_ocr(valor: str) -> str:
