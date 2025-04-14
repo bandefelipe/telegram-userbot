@@ -67,7 +67,7 @@ async def extrair_valor_apos_label(imagem: Image.Image, chat_id: int, app: Clien
         await app.send_message(chat_id, f"[OCR] Texto após pytesseract:\n{texto}")
 
         # Regex para buscar apenas "Cotações totais"
-        padrao = r"cota[çc][aã]o(?:es)?\s+totais\s*[:\-]?\s*([\d.,]+)"
+        padrao = r"cota[çc][aã]o(?:es)?\s*totais\s*[:\-]?\s*([\d]+[.,]?[\d]*)"
         match = re.search(padrao, texto, re.IGNORECASE)
         if match:
             valor = match.group(1).replace(',', '.')
