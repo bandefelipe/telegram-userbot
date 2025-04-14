@@ -54,7 +54,7 @@ app = Client(
     session_string=open("user.session").read().strip()
 )
 
-reader = easyocr.Reader(['pt'])  # Inicializa uma vez
+reader = easyocr.Reader(['pt'], gpu=False)
 
 async def extrair_valor_apos_label(imagem: Image.Image, chat_id: int, app: Client) -> Optional[str]:
     try:
