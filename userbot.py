@@ -61,7 +61,7 @@ async def extrair_valor_apos_label(imagem: Image.Image, chat_id: int, app: Clien
         recorte_inferior = imagem.crop((0, y_inicio, largura, altura))
         recorte_inferior.save("debug_1_recorte_inferior.png")
 
-''' tirando pre processamento
+"""
         # 🔍 Pré-processamento com OpenCV para fundo escuro
         imagem_cv = cv2.cvtColor(np.array(recorte_inferior), cv2.COLOR_RGB2BGR)
         imagem_gray = cv2.cvtColor(imagem_cv, cv2.COLOR_BGR2GRAY)
@@ -75,12 +75,12 @@ async def extrair_valor_apos_label(imagem: Image.Image, chat_id: int, app: Clien
 
         # 🧠 OCR com configuração focada em linha única
         config = r'--oem 3 --psm 6'
-   '''     # OCR no recorte original
+   """     # OCR no recorte original
         texto_original = pytesseract.image_to_string(recorte_inferior, lang='por', config=config)
-'''
+"""
         # OCR no recorte pré-processado
         texto_processado = pytesseract.image_to_string(imagem_preprocessada, lang='por', config=config)
-'''
+"""
         # Junta os textos
         texto = texto_original ## + '\n' + texto_processado
         logging.info(f"[OCR] Texto extraído:\n{texto}")
