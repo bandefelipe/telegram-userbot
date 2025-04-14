@@ -61,7 +61,7 @@ async def extrair_valor_apos_label(imagem: Image.Image, chat_id: int, app: Clien
         recorte_inferior = imagem.crop((0, y_inicio, largura, altura))
         recorte_inferior.save("debug_1_recorte_inferior.png")
 
-
+''' tirando pre processamento
         # 🔍 Pré-processamento com OpenCV para fundo escuro
         imagem_cv = cv2.cvtColor(np.array(recorte_inferior), cv2.COLOR_RGB2BGR)
         imagem_gray = cv2.cvtColor(imagem_cv, cv2.COLOR_BGR2GRAY)
@@ -75,14 +75,14 @@ async def extrair_valor_apos_label(imagem: Image.Image, chat_id: int, app: Clien
 
         # 🧠 OCR com configuração focada em linha única
         config = r'--oem 3 --psm 6'
-        # OCR no recorte original
+   '''     # OCR no recorte original
         texto_original = pytesseract.image_to_string(recorte_inferior, lang='por', config=config)
-
+'''
         # OCR no recorte pré-processado
         texto_processado = pytesseract.image_to_string(imagem_preprocessada, lang='por', config=config)
-
+'''
         # Junta os textos
-        texto = texto_original + '\n' + texto_processado
+        texto = texto_original ## + '\n' + texto_processado
         logging.info(f"[OCR] Texto extraído:\n{texto}")
         logging.info(f"[OCR] Texto após Tesseract:\n{texto}")
         await app.send_message(chat_id, f"[OCR] Texto após Tesseract:\n{texto}")
@@ -103,9 +103,9 @@ async def extrair_valor_apos_label(imagem: Image.Image, chat_id: int, app: Clien
         # Caso não encontre, envia as imagens no grupo
         await app.send_message(chat_id, "⚠️ Não consegui identificar a cotação. Enviando imagens de debug:")
         await app.send_photo(chat_id, "debug_1_recorte_inferior.png", caption="📸 Recorte Inferior")
-        await app.send_photo(chat_id, "debug_2_suavizacao.png", caption="🎨 Suavização")
+        ##await app.send_photo(chat_id, "debug_2_suavizacao.png", caption="🎨 Suavização")
         os.remove("debug_1_recorte_inferior.png")
-        os.remove("debug_2_suavizacao.png")
+        ##os.remove("debug_2_suavizacao.png")
         
         return None
 
