@@ -9,6 +9,8 @@ from typing import Optional
 from pyrogram import Client, filters
 from pyrogram.enums import ParseMode
 from pyrogram.types import Message
+import easyocr
+
 
 API_ID = int(os.environ["API_ID"])
 API_HASH = os.environ["API_HASH"]
@@ -51,8 +53,6 @@ app = Client(
     api_hash=API_HASH,
     session_string=open("user.session").read().strip()
 )
-
-import easyocr
 
 reader = easyocr.Reader(['pt'])  # Inicializa uma vez
 
