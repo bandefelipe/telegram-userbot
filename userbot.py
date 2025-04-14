@@ -72,7 +72,7 @@ async def extrair_valor_apos_label(imagem: Image.Image, chat_id: int, app: Clien
         imagem_preprocessada = Image.fromarray(imagem_filt)
         imagem_preprocessada.save("debug_3_threshold.png")
         # 🧠 OCR com configuração focada em linha única
-        config = r'--oem 3 --psm 11'
+        config = r'--oem 3 --psm 6'
         # OCR no recorte original
         texto_original = pytesseract.image_to_string(recorte_inferior, lang='por', config=config)
 
