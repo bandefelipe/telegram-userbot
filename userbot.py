@@ -66,8 +66,8 @@ async def extrair_valor_apos_label(imagem: Image.Image, chat_id: int, app: Clien
         await app.send_message(chat_id, f"[OCR] Texto após Tesseract:\n{texto}")
 
         padroes = [
-            r"cota[çc][aã]o(?:es)?\s+totais?\s*[:\-]?\s*([\d.,]+)",
-            r"total\s+de\s+cota[çc][aã]o(?:es)?\s*[:\-]?\s*([\d.,]+)"
+                r"cota[çc][aã]o(?:es)?\s+totais?\s*(?:[:\-]?\s*)?([\d.,]+)",
+                r"total\s+de\s+cota[çc][aã]o(?:es)?\s*(?:[:\-]?\s*)?([\d.,]+)"
         ]
 
         for padrao in padroes:
