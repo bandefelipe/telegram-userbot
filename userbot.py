@@ -57,7 +57,7 @@ async def extrair_valor_apos_label(imagem: Image.Image, chat_id: int, app: Clien
     try:
         # 🔽 Recorta apenas o quarto inferior da imagem
         largura, altura = imagem.size
-        y_inicio = int(altura * 0.75)
+        y_inicio = int(altura * 0.70)
         recorte_inferior = imagem.crop((0, y_inicio, largura, altura))
         recorte_inferior.save("debug_1_recorte_inferior.png")
 
