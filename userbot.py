@@ -1,15 +1,14 @@
 import os
-from pyrogram import Client, filters
-from pyrogram.types import Message
-from PIL import Image
-import pytesseract
 import re
 import logging
-from io import BytesIO
+import pytesseract
 import numpy as np
-from pyrogram.enums import ParseMode
+from PIL import Image
+from io import BytesIO
 from typing import Optional
-import cv2
+from pyrogram import Client, filters
+from pyrogram.enums import ParseMode
+from pyrogram.types import Message
 
 API_ID = int(os.environ["API_ID"])
 API_HASH = os.environ["API_HASH"]
@@ -50,44 +49,22 @@ app = Client(
     name="userbot",
     api_id=API_ID,
     api_hash=API_HASH,
-    session_string = open("user.session").read().strip()
+    session_string=open("user.session").read().strip()
 )
 
 async def extrair_valor_apos_label(imagem: Image.Image, chat_id: int, app: Client) -> Optional[str]:
     try:
-        # 🔽 Recorta apenas o quarto inferior da imagem
         largura, altura = imagem.size
         y_inicio = int(altura * 0.60)
         recorte_inferior = imagem.crop((0, y_inicio, largura, altura))
         recorte_inferior.save("debug_1_recorte_inferior.png")
 
-
-        # 🔍 Pré-processamento com OpenCV para fundo escuro
-    ##    imagem_cv = cv2.cvtColor(np.array(recorte_inferior), cv2.COLOR_RGB2BGR)
-    ##    imagem_gray = cv2.cvtColor(imagem_cv, cv2.COLOR_BGR2GRAY)
-        # Suaviza e mantém bordas
-    ##    imagem_filt = cv2.bilateralFilter(imagem_gray, 9, 75, 75)
-    ##    Image.fromarray(imagem_filt).save("debug_2_suavizacao.png")
-
-        # 👁️ Imagem final para OCR (sem threshold)
-      ##  imagem_preprocessada = Image.fromarray(imagem_filt)
-     ##   imagem_preprocessada.save("debug_3_ocr_final.png")
-
-        # 🧠 OCR com configuração focada em linha única
-   ##     config = r'--oem 3 --psm 6'
-       # OCR no recorte original
-        texto_original = pytesseract.image_to_string(recorte_inferior, lang='por', config=config)
-
-        # OCR no recorte pré-processado
- ##       texto_processado = pytesseract.image_to_string(imagem_preprocessada, lang='por', config=config)
-
-        # Junta os textos
-        texto = texto_original ## + '\n' + texto_processado
-        logging.info(f"[OCR] Texto extraído:\n{texto}")
+        config = r'--oem 3 --psm 6'
+        texto = pytesseract.image_to_string(recorte_inferior, lang='por', config=config)
+        
         logging.info(f"[OCR] Texto após Tesseract:\n{texto}")
         await app.send_message(chat_id, f"[OCR] Texto após Tesseract:\n{texto}")
 
-        # 🔍 Regex tolerante a variações de escrita
         padroes = [
             r"cota[çc][aã]o(?:es)?\s+totais?\s*[:\-]?\s*([\d.,]+)",
             r"total\s+de\s+cota[çc][aã]o(?:es)?\s*[:\-]?\s*([\d.,]+)"
@@ -100,13 +77,9 @@ async def extrair_valor_apos_label(imagem: Image.Image, chat_id: int, app: Clien
                 logging.info(f"[OCR] Valor encontrado: {valor}")
                 return valor
 
-        # Caso não encontre, envia as imagens no grupo
         await app.send_message(chat_id, "⚠️ Não consegui identificar a cotação. Enviando imagens de debug:")
         await app.send_photo(chat_id, "debug_1_recorte_inferior.png", caption="📸 Recorte Inferior")
-        ##await app.send_photo(chat_id, "debug_2_suavizacao.png", caption="🎨 Suavização")
         os.remove("debug_1_recorte_inferior.png")
-        ##os.remove("debug_2_suavizacao.png")
-        
         return None
 
     except Exception as e:
@@ -158,12 +131,13 @@ async def processar_mensagem(client: Client, message: Message):
             valor_corrigido = "".join(partes[:-1]) + "." + partes[-1]
         else:
             valor_corrigido = valor_limpo
-        try:
-            float_valor = float(valor_corrigido)
-            retorno = int(round(float_valor * 100))
-        except ValueError:
-            await message.reply_text(f"Erro ao converter o valor '{valor}' em número.")
-            return
+
+        float_valor = float(valor_corrigido)
+        retorno = int(round(float_valor * 100))
+
+    except ValueError:
+        await message.reply_text(f"Erro ao converter o valor '{valor}' em número.")
+        return
     except:
         await message.reply_text("Erro ao calcular o valor de retorno.")
         return
