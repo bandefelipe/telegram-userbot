@@ -55,13 +55,13 @@ app = Client(
 
 async def extrair_valor_apos_label(imagem: Image.Image, chat_id: int, app: Client) -> Optional[str]:
     try:
-        largura, altura = imagem.size
-        y_inicio = int(altura * 0.60)
-        recorte_inferior = imagem.crop((0, y_inicio, largura, altura))
-        recorte_inferior.save("debug_1_recorte_inferior.png")
+        ##largura, altura = imagem.size
+        ##y_inicio = int(altura * 0.60)
+        ##recorte_inferior = imagem.crop((0, y_inicio, largura, altura))
+        ##recorte_inferior.save("debug_1_recorte_inferior.png")
 
         # OCR com pytesseract
-        texto = pytesseract.image_to_string(recorte_inferior, lang='por')
+        texto = pytesseract.image_to_string(imagem, lang='por')
         logging.info(f"[OCR-pytesseract] Texto extraído:\n{texto}")
         await app.send_message(chat_id, f"[OCR] Texto após pytesseract:\n{texto}")
 
@@ -74,8 +74,8 @@ async def extrair_valor_apos_label(imagem: Image.Image, chat_id: int, app: Clien
             return valor
 
         await app.send_message(chat_id, "⚠️ Não consegui identificar a cotação. Enviando imagens de debug:")
-        await app.send_photo(chat_id, "debug_1_recorte_inferior.png", caption="📸 Recorte Inferior")
-        os.remove("debug_1_recorte_inferior.png")
+        ##await app.send_photo(chat_id, "debug_1_recorte_inferior.png", caption="📸 Recorte Inferior")
+        ##os.remove("debug_1_recorte_inferior.png")
         return None
 
     except Exception as e:
