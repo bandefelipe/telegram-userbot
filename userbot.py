@@ -67,15 +67,23 @@ async def extrair_valor_apos_label(imagem: Image.Image, chat_id: int, app: Clien
 
         linhas = texto.splitlines()
         for linha in linhas:
-            if LABEL.lower() in linha.lower():
+            if "cota" in linha.lower() and "totais" in linha.lower():
                 logging.info(f"[OCR] Linha com label encontrada: {linha}")
+        
+                # Tenta extrair com regex direto da linha
+                match = re.search(r"totais[:\s\-]*([\d.,]+)", linha.lower())
+                if match:
+                    valor = match.group(1).replace(',', '.')
+                    logging.info(f"[OCR] Valor extraído com regex da linha: {valor}")
+                    return valor
+        
+                # Se regex falhar, tenta split manual como fallback
                 partes = linha.split()
                 for i, parte in enumerate(partes):
-                    if LABEL.split()[0].lower() in parte.lower():
+                    if "totais" in parte.lower():
                         try:
-                            valor = partes[i+2] if partes[i+1].lower() == 'totais' else partes[i+1]
-                            valor = valor.replace(',', '.')
-                            logging.info(f"[OCR] Valor extraído da linha: {valor}")
+                            valor = partes[i+1].replace(',', '.')
+                            logging.info(f"[OCR] Valor extraído como fallback: {valor}")
                             return valor
                         except IndexError:
                             continue
