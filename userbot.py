@@ -9,7 +9,7 @@ from typing import Optional
 from pyrogram import Client, filters
 from pyrogram.enums import ParseMode
 from pyrogram.types import Message
-
+import cv2
 
 API_ID = int(os.environ["API_ID"])
 API_HASH = os.environ["API_HASH"]
@@ -60,6 +60,15 @@ async def extrair_valor_apos_label(imagem: Image.Image, chat_id: int, app: Clien
         recorte_inferior = imagem.crop((0, y_inicio, largura, altura))
         recorte_inferior.save("debug_1_recorte_inferior.png")
 
+        # 🧪 Pré-processamento com OpenCV
+        imagem_cv = cv2.cvtColor(np.array(recorte_inferior), cv2.COLOR_RGB2GRAY)
+        imagem_cv = cv2.equalizeHist(imagem_cv)
+        imagem_cv = cv2.adaptiveThreshold(
+            imagem_cv, 255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C,
+            cv2.THRESH_BINARY, 11, 2
+        )
+        cv2.imwrite("debug_2_binarizada.png", imagem_cv)
+        
         # OCR com pytesseract
         texto = pytesseract.image_to_string(recorte_inferior, lang='por')
         logging.info(f"[OCR-pytesseract] Texto extraído:\n{texto}")
@@ -90,7 +99,9 @@ async def extrair_valor_apos_label(imagem: Image.Image, chat_id: int, app: Clien
 
         await app.send_message(chat_id, "⚠️ Não consegui identificar a cotação. Enviando imagens de debug:")
         await app.send_photo(chat_id, "debug_1_recorte_inferior.png", caption="📸 Recorte Inferior")
+        await app.send_photo(chat_id, "debug_2_binarizada.png", caption="📸 Imagem binarizada")
         os.remove("debug_1_recorte_inferior.png")
+        os.remove("debug_2_binarizada.png")
         return None
 
     except Exception as e:
