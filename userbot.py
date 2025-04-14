@@ -97,11 +97,17 @@ def extrair_valor_apos_label(imagem: Image.Image) -> Optional[str]:
                 logging.info(f"[OCR] Valor encontrado: {valor}")
                 return valor
 
-        logging.warning("⚠️ [OCR] Não consegui identificar a cotação.")
+        # Caso não encontre, envia as imagens no grupo
+        await app.send_message(chat_id, "⚠️ Não consegui identificar a cotação. Enviando imagens de debug:")
+        await app.send_photo(chat_id, "debug_1_recorte_inferior.png", caption="📸 Recorte Inferior")
+        await app.send_photo(chat_id, "debug_2_suavizacao.png", caption="🎨 Suavização")
+        await app.send_photo(chat_id, "debug_3_threshold.png", caption="🖤 Pós-Threshold")
+
         return None
 
     except Exception as e:
         logging.error(f"[OCR] Erro inesperado: {e}")
+        await app.send_message(chat_id, f"❌ Erro ao processar imagem: {e}")
         return None
 
 def corrigir_valor_ocr(valor: str) -> str:
