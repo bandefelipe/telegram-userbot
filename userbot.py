@@ -14,9 +14,9 @@ ID_GRUPO_AUTORIZADO = int(os.environ["ID_GRUPO_AUTORIZADO"])
 TEMPLATE_PRE = f'''
 {EMOJIS["sinal_verde"]}OPORTUNIDADE DE ENTRADA CONFIRMADA {EMOJIS["bolsa_dinheiro"]}
 
-👉🏻 BILHETE PRONTO AQUI! 👈🏻
+👉🏻 <b>BILHETE PRONTO AQUI!</b> 👈🏻
 
-{EMOJIS["presente"]}ODD  @{{X}} {EMOJIS["fogo"]}
+{EMOJIS["presente"]} ODD  <b>@{{X}}</b> {EMOJIS["fogo"]}
 
 {EMOJIS["seta_verde_direita"]}APOSTE {EMOJIS["dinheiro"]} 100
 {EMOJIS["seta_verde_direita"]}RETORNO{EMOJIS["dinheiro"]} {{Y}}
@@ -29,9 +29,9 @@ TEMPLATE_PRE = f'''
 TEMPLATE_AOVIVO = f'''
 {EMOJIS["sinal_verde"]}OPORTUNIDADE DE ENTRADA CONFIRMADA {EMOJIS["bolsa_dinheiro"]}
 
-👉🏻 BILHETE PRONTO AQUI! 👈🏻
+👉🏻 <b>BILHETE PRONTO AQUI!</b> 👈🏻
 
-{EMOJIS["presente"]}ODD  @{{X}} {EMOJIS["fogo"]}
+{EMOJIS["presente"]} ODD  <b>@{{X}}</b> {EMOJIS["fogo"]}
 
 {EMOJIS["seta_verde_direita"]}APOSTE {EMOJIS["dinheiro"]} 100
 {EMOJIS["seta_verde_direita"]}RETORNO{EMOJIS["dinheiro"]} {{Y}}
@@ -39,6 +39,23 @@ TEMPLATE_AOVIVO = f'''
 {EMOJIS["bola_pulando"]} AO-VIVO 🛜
 
 {EMOJIS["sirene_verde"]}APOSTE COM RESPONSABILIDADE{EMOJIS["maior_18"]}'''
+
+TEMPLATE_SUPER = f'''
+{EMOJIS['sinal_verde']} OPORTUNIDADE ÚNICA DE SUPER ODD! {EMOJIS['fogo']}
+
+{EMOJIS["sirene_verde"]}{EMOJIS["sirene_verde"]}{EMOJIS["sirene_verde"]}{EMOJIS["sirene_verde"]}{EMOJIS["sirene_verde"]}
+{EMOJIS["seta_verde_direita"]} {{DESCRICAO}}
+{EMOJIS["sirene_verde"]}{EMOJIS["sirene_verde"]}{EMOJIS["sirene_verde"]}{EMOJIS["sirene_verde"]}{EMOJIS["sirene_verde"]}
+
+{EMOJIS['dinheiro']} Ganho praticamente <b>GARANTIDO</b> com essa odd absurda! {EMOJIS['dinheiro']} 
+
+{EMOJIS["presente"]} ODD ESPECIAL: <b>@{{X}}</b> {EMOJIS["fogo"]}
+
+👉🏻 <b>BILHETE PRONTO AQUI!</b> 👈🏻
+
+{EMOJIS["bola_pulando"]} SUPER-ODD {EMOJIS['dinheiro']}
+'''
+
 
 app = Client(
     name="userbot",
