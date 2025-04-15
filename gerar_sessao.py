@@ -3,8 +3,8 @@ import os
 import asyncio
 
 # Substitua pelos dados da sua conta (não do bot)
-API_ID = 20238661  # coloque seu API_ID aqui
-API_HASH = "d41b8480695c3aca5959537080e6ebd6"  # coloque seu API_HASH aqui
+API_ID = 21475448  # coloque seu API_ID aqui
+API_HASH = "6105d23a50ec2e98e33779dd13496466"  # coloque seu API_HASH aqui
 
 async def main():
     app = Client("user_setup", api_id=API_ID, api_hash=API_HASH)
