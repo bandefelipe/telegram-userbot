@@ -91,7 +91,13 @@ async def processar_mensagem(client: Client, message: Message):
             await message.reply_text("❌ Odd inválida.")
             return
 
-        descricao = " ".join(palavras[2:])
+                # Junta tudo depois da odd
+        descricao_com_link = " ".join(palavras[2:])
+        
+        # Verifica se tem link com shareCode e separa
+        match = re.search(r'(https?://\S*shareCode=\w+)', descricao_com_link)
+        link_final = match.group(1) if match else None
+        descricao = descricao_com_link.replace(link_final, '').strip() if link_final else descricao_com_link
 
         match = re.search(r'shareCode=([A-Z0-9]+)', caption)
         link_final = None
