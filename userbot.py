@@ -150,7 +150,7 @@ async def processar_mensagem(client: Client, message: Message):
     texto_final = template.replace('{X}', valor_formatado).replace('{Y}', f"{retorno:,}".replace(",", "."))
 
     if link_final:
-    texto_final = texto_final.replace(
+        texto_final = texto_final.replace(
         "👉🏻 <b>BILHETE PRONTO AQUI!</b> 👈🏻",
         f'<a href="{link_final}">👉🏻 <b>BILHETE PRONTO AQUI!</b> 👈🏻</a>'
         )
