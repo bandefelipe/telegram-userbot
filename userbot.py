@@ -4,40 +4,41 @@ import logging
 from pyrogram import Client, filters
 from pyrogram.enums import ParseMode
 from pyrogram.types import Message
-
+from emojis import EMOJIS
 
 API_ID = int(os.environ["API_ID"])
 API_HASH = os.environ["API_HASH"]
 ID_GRUPO_AUTORIZADO = int(os.environ["ID_GRUPO_AUTORIZADO"])
 
 # Templates
-TEMPLATE_PRE = '''
-🚨OPORTUNIDADE DE ENTRADA CONFIRMADA 💰
+TEMPLATE_PRE = f'''
+{EMOJIS["sinal_verde"]}OPORTUNIDADE DE ENTRADA CONFIRMADA {EMOJIS["bolsa_dinheiro"]}
 
-👉🏻 CLIQUE AQUI! BILHETE PRONTO! 👈🏻
+👉🏻 BILHETE PRONTO AQUI! 👈🏻
 
-✅ODD  @{X}
+{EMOJIS["presente"]}ODD  @{{X}} {EMOJIS["fogo"]}
 
-➡️APOSTE 💸 100
-➡️RETORNO💸 {Y}
+{EMOJIS["seta_verde_direita"]}APOSTE {EMOJIS["dinheiro"]} 100
+{EMOJIS["seta_verde_direita"]}RETORNO{EMOJIS["dinheiro"]} {{Y}}
 
-⏳ PRE-JOGO 🖼️
+{EMOJIS["carregando"]} PRE-JOGO ⏳
 
-🚨 APOSTE COM RESPONSABILIDADE🔞'''
+{EMOJIS["sirene_verde"]}APOSTE COM RESPONSABILIDADE{EMOJIS["maior_18"]}'''
 
-TEMPLATE_AOVIVO = '''
-🚨OPORTUNIDADE DE ENTRADA CONFIRMADA 💰
 
-👉🏻 CLIQUE AQUI! BILHETE PRONTO! 👈🏻
+TEMPLATE_AOVIVO = f'''
+{EMOJIS["sinal_verde"]}OPORTUNIDADE DE ENTRADA CONFIRMADA {EMOJIS["bolsa_dinheiro"]}
 
-✅ODD  @{X}
+👉🏻 BILHETE PRONTO AQUI! 👈🏻
 
-➡️APOSTE 💸 100
-➡️RETORNO💸 {Y}
+{EMOJIS["presente"]}ODD  @{{X}} {EMOJIS["fogo"]}
 
-🔴 AO-VIVO 🖼️
+{EMOJIS["seta_verde_direita"]}APOSTE {EMOJIS["dinheiro"]} 100
+{EMOJIS["seta_verde_direita"]}RETORNO{EMOJIS["dinheiro"]} {{Y}}
 
-🚨 APOSTE COM RESPONSABILIDADE🔞'''
+{EMOJIS["bola_pulando"]} AO-VIVO 🛜
+
+{EMOJIS["sirene_verde"]}APOSTE COM RESPONSABILIDADE{EMOJIS["maior_18"]}'''
 
 app = Client(
     name="userbot",
