@@ -61,7 +61,7 @@ app = Client(
     name="userbot",
     api_id=API_ID,
     api_hash=API_HASH,
-    session_string=open("user.session").read().strip()
+    session_string=open(".secrets/user.session").read().strip()
 )
 
 @app.on_message(filters.photo & (filters.caption | filters.text))
