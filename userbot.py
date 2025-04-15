@@ -24,7 +24,7 @@ TEMPLATE_PRE = f'''
 {EMOJIS["seta_verde_direita"]}APOSTE {EMOJIS["dinheiro"]} 100
 {EMOJIS["seta_verde_direita"]}RETORNO{EMOJIS["dinheiro"]} {{Y}}
 
-{EMOJIS["carregando"]} PRE-JOGO ⏳
+{EMOJIS["carregando"]} <b>PRE-JOGO</b> ⏳
 
 {EMOJIS["sirene_verde"]}APOSTE COM RESPONSABILIDADE{EMOJIS["maior_18"]}'''
 
@@ -39,7 +39,7 @@ TEMPLATE_AOVIVO = f'''
 {EMOJIS["seta_verde_direita"]}APOSTE {EMOJIS["dinheiro"]} 100
 {EMOJIS["seta_verde_direita"]}RETORNO{EMOJIS["dinheiro"]} {{Y}}
 
-{EMOJIS["bola_pulando"]} AO-VIVO 🛜
+{EMOJIS["bola_pulando"]} <b>AO-VIVO</b> 🛜
 
 {EMOJIS["sirene_verde"]}APOSTE COM RESPONSABILIDADE{EMOJIS["maior_18"]}'''
 
@@ -56,7 +56,7 @@ TEMPLATE_SUPER = f'''
 
 👉🏻 <b>BILHETE PRONTO AQUI!</b> 👈🏻
 
-{EMOJIS["bola_pulando"]} SUPER-ODD {EMOJIS['dinheiro']}
+{EMOJIS["bola_pulando"]} <b>SUPER-ODD</b> {EMOJIS['dinheiro']}
 '''
 
 
