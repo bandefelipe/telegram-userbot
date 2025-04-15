@@ -21,8 +21,8 @@ TEMPLATE_PRE = f'''
 
 {EMOJIS["presente"]} ODD  <b>@{{X}}</b> {EMOJIS["fogo"]}
 
-{EMOJIS["seta_verde_direita"]}APOSTE {EMOJIS["dinheiro"]} 100
-{EMOJIS["seta_verde_direita"]}RETORNO{EMOJIS["dinheiro"]} {{Y}}
+{EMOJIS["seta_verde_direita"]}APOSTE {EMOJIS["dinheiro"]} <b>100</b>
+{EMOJIS["seta_verde_direita"]}RETORNO{EMOJIS["dinheiro"]} <b>{{Y}}</b>
 
 {EMOJIS["carregando"]} <b>PRE-JOGO</b> ⏳
 
@@ -36,8 +36,8 @@ TEMPLATE_AOVIVO = f'''
 
 {EMOJIS["presente"]} ODD  <b>@{{X}}</b> {EMOJIS["fogo"]}
 
-{EMOJIS["seta_verde_direita"]}APOSTE {EMOJIS["dinheiro"]} 100
-{EMOJIS["seta_verde_direita"]}RETORNO{EMOJIS["dinheiro"]} {{Y}}
+{EMOJIS["seta_verde_direita"]}APOSTE {EMOJIS["dinheiro"]} <b>100</b>
+{EMOJIS["seta_verde_direita"]}RETORNO{EMOJIS["dinheiro"]} <b>{{Y}}</b>
 
 {EMOJIS["bola_pulando"]} <b>AO-VIVO</b> 🛜
 
@@ -47,7 +47,7 @@ TEMPLATE_SUPER = f'''
 {EMOJIS['sinal_verde']} OPORTUNIDADE ÚNICA DE SUPER ODD! {EMOJIS['fogo']}
 
 {EMOJIS["sirene_verde"]}{EMOJIS["sirene_verde"]}{EMOJIS["sirene_verde"]}{EMOJIS["sirene_verde"]}{EMOJIS["sirene_verde"]}
-{EMOJIS["seta_verde_direita"]} {{DESCRICAO}}
+{EMOJIS["seta_verde_direita"]} <b>{{DESCRICAO}}</b>
 {EMOJIS["sirene_verde"]}{EMOJIS["sirene_verde"]}{EMOJIS["sirene_verde"]}{EMOJIS["sirene_verde"]}{EMOJIS["sirene_verde"]}
 
 {EMOJIS['dinheiro']} Ganho praticamente <b>GARANTIDO</b> com essa odd absurda! {EMOJIS['dinheiro']} 
