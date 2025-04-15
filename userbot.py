@@ -5,6 +5,9 @@ from pyrogram import Client, filters
 from pyrogram.enums import ParseMode
 from pyrogram.types import Message
 from emojis import EMOJIS
+from dotenv import load_dotenv
+
+load_dotenv()
 
 API_ID = int(os.environ["API_ID"])
 API_HASH = os.environ["API_HASH"]
