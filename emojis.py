@@ -8,4 +8,5 @@ EMOJIS = {
     "bolsa_dinheiro": "<emoji id=5224257782013769471>",
     "fogo": "<emoji id=5424972470023104089>",  # ID correto do 🔥
     "maior_18": "<emoji id=5348485489097717994>",  # ID correto do 🔞
+    "bola_pulando": "<emoji id=5416081784641168838>",  # ID correto do 🔞
 }
