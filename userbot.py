@@ -71,9 +71,57 @@ async def processar_mensagem(client: Client, message: Message):
 
     caption = message.caption or message.text or ""
     palavras = caption.strip().split()
-    if not palavras or palavras[0].upper() not in ['PRE', 'AOVIVO']:
+    if not palavras or palavras[0].upper() not in ['PRE', 'AOVIVO', 'SUPER']:
         return
 
+    tipo = palavras[0].upper()
+
+    foto = await message.download()
+
+    # 🔸 Caso SUPER
+    if tipo == 'SUPER':
+        if len(palavras) < 3:
+            await message.reply_text("❌ Formato incorreto. Use: SUPER [odd] [descrição] [link opcional]")
+            return
+
+        try:
+            odd_str = palavras[1].replace(",", ".")
+            float_valor = float(odd_str)
+        except ValueError:
+            await message.reply_text("❌ Odd inválida.")
+            return
+
+        descricao = " ".join(palavras[2:])
+
+        match = re.search(r'shareCode=([A-Z0-9]+)', caption)
+        link_final = None
+        if match:
+            share_code = match.group(1)
+            link_final = f"https://go.aff.mcgames.bet/874az28c?shareCode={share_code}"
+
+        valor_formatado = f"{float_valor:,.2f}".replace(",", "X").replace(".", ",").replace("X", ".")
+        texto_final = TEMPLATE_SUPER.replace('{X}', valor_formatado).replace('{DESCRICAO}', descricao)
+
+        if link_final:
+            texto_final = texto_final.replace(
+                "👉🏻 <b>BILHETE PRONTO AQUI!</b> 👈🏻",
+                f'<a href="{link_final}">👉🏻 <b>BILHETE PRONTO AQUI!</b> 👈🏻</a>'
+            )
+
+        await client.send_photo(
+            chat_id=message.chat.id,
+            photo=foto,
+            caption=texto_final,
+            parse_mode=ParseMode.HTML
+        )
+
+        try:
+            await message.delete()
+        except Exception as e:
+            logging.warning(f"Erro ao apagar mensagem: {e}")
+        return
+
+    # 🔹 Caso PRE ou AOVIVO
     try:
         odd_str = palavras[1].replace(",", ".")
         float_valor = float(odd_str)
@@ -88,7 +136,7 @@ async def processar_mensagem(client: Client, message: Message):
         share_code = match.group(1)
         link_final = f"https://go.aff.mcgames.bet/874az28c?shareCode={share_code}"
 
-    template = TEMPLATE_PRE if palavras[0].upper() == 'PRE' else TEMPLATE_AOVIVO
+    template = TEMPLATE_PRE if tipo == 'PRE' else TEMPLATE_AOVIVO
     valor_formatado = f"{float_valor:,.2f}".replace(",", "X").replace(".", ",").replace("X", ".")
     texto_final = template.replace('{X}', valor_formatado).replace('{Y}', f"{retorno:,}".replace(",", "."))
 
@@ -98,7 +146,6 @@ async def processar_mensagem(client: Client, message: Message):
             f'<a href="{link_final}">👉🏻 CLIQUE AQUI! BILHETE PRONTO! 👈🏻</a>'
         )
 
-    foto = await message.download()
     await client.send_photo(
         chat_id=message.chat.id,
         photo=foto,
